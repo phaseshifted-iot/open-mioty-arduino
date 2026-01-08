@@ -120,10 +120,10 @@ void loop() {
 
 | Board | MCU | Radio | Status |
 |-------|-----|-------|--------|
-| [Arduino Nesso N1](https://store.arduino.cc/products/nesso-n1) | ESP32-C6 | SX1262 | ✅ Working |
+| [Arduino Nesso N1](https://store.arduino.cc/products/nesso-n1) | ESP32-C6 | SX1262 | ⚠️ Experimental |
 | [Demo Kit](https://github.com/phaseshifted-iot/mioty-demokit) | RP2040 | RFM69 | Untested |
 
-**Status**: Successfully transmitting on Arduino Nesso N1. RF parameters validated for basic operation.
+**Status**: Experimental - basic transmission working, but display integration and timing issues under investigation. Use with caution.
 
 **Regional Profiles**: EU (868 MHz), US (915 MHz), IN (865 MHz)
 
