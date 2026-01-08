@@ -1,0 +1,15 @@
+# Display example - work in progress, not ready for publication
+examples/basicTransmitNessoDisplay/
+
+# IDE files
+.vscode/
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.o
+*.elf
+*.bin
+*.hex

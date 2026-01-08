@@ -1,0 +1,46 @@
+#######################################
+# Syntax Coloring Map for TS-UNB-Arduino
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+SimpleNode	KEYWORD1
+FixedUplinkMac	KEYWORD1
+Phy	KEYWORD1
+RadioBurst	KEYWORD1
+Aes128	KEYWORD1
+SX1262RadioLib	KEYWORD1
+ESP32TsUnb	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init	KEYWORD2
+send	KEYWORD2
+encode	KEYWORD2
+transmit	KEYWORD2
+setFrequency	KEYWORD2
+setOutputPower	KEYWORD2
+setBurstLength	KEYWORD2
+getBurst	KEYWORD2
+get_channel	KEYWORD2
+
+#######################################
+# Regional Profiles (KEYWORD1)
+#######################################
+
+EU0_Profile	KEYWORD1
+EU1_Profile	KEYWORD1
+EU2_Profile	KEYWORD1
+US0_Profile	KEYWORD1
+IN0_Profile	KEYWORD1
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+TsUnb_UPG1	LITERAL1
+TsUnb_UPG3	LITERAL1
