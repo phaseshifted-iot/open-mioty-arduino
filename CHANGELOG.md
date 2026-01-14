@@ -5,6 +5,11 @@ All notable changes to the OpenMioty Arduino library will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-01-14
+
+### Fixed
+- library.properties update
+
 ## [0.1.0] - 2026-01-08
 
 ### Added
@@ -45,4 +50,5 @@ Third-Party Modified Version of the Fraunhofer TS-UNB-Lib
 
 For detailed release information, see [GitHub Releases](https://github.com/phaseshifted-iot/open-mioty-arduino/releases).
 
+[0.1.1]: https://github.com/phaseshifted-iot/open-mioty-arduino/releases/tag/v0.1.1
 [0.1.0]: https://github.com/phaseshifted-iot/open-mioty-arduino/releases/tag/v0.1.0

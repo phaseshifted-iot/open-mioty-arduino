@@ -82,10 +82,10 @@ See LICENSE.md for complete license information
 #define OPEN_MIOTY_H_
 
 // Version information
-#define OPEN_MIOTY_VERSION "0.1.0"
+#define OPEN_MIOTY_VERSION "0.1.1"
 #define OPEN_MIOTY_VERSION_MAJOR 0
 #define OPEN_MIOTY_VERSION_MINOR 1
-#define OPEN_MIOTY_VERSION_PATCH 0
+#define OPEN_MIOTY_VERSION_PATCH 1
 
 // Core TS-UNB protocol (order matters - dependencies first)
 #include "core/Utils/BitAccess.h"

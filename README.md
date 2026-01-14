@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/badge/License-Academic%20%26%20Non--Commercial-blue.svg)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/Platform-ESP32-brightgreen.svg)](https://www.arduino.cc)
-[![Status](https://img.shields.io/badge/Status-v0.1.0-orange.svg)](CHANGELOG.md)
+[![Status](https://img.shields.io/badge/Status-v0.1.1-orange.svg)](CHANGELOG.md)
 
 > ⚠️ **IMPORTANT**: Academic and non-commercial use only. See [LICENSE.md](LICENSE.md) and [NOTICE.md](NOTICE.md) for legal disclaimers and patent licensing requirements.
 
@@ -26,7 +26,7 @@ OpenMioty is an Arduino library for the **mioty®** LPWAN protocol (ETSI TS 103 
 
 ### Installation
 
-**Arduino Library Manager** (planned):
+**Arduino Library Manager**:
 ```
 Sketch → Include Library → Manage Libraries → Search "OpenMioty"
 ```
@@ -38,7 +38,7 @@ Sketch → Include Library → Manage Libraries → Search "OpenMioty"
 **PlatformIO**:
 ```ini
 lib_deps = 
-    https://github.com/phaseshifted-iot/open-mioty-arduino.git#v0.1.0
+    https://github.com/phaseshifted-iot/open-mioty-arduino.git#v0.1.1
     jgromes/RadioLib @ ^6.0.0
 ```
 
@@ -123,7 +123,7 @@ void loop() {
 | [Arduino Nesso N1](https://store.arduino.cc/products/nesso-n1) | ESP32-C6 | SX1262 | ⚠️ Experimental |
 | [Demo Kit](https://github.com/phaseshifted-iot/mioty-demokit) | RP2040 | RFM69 | Untested |
 
-**Status**: Experimental - basic transmission working, but display integration and timing issues under investigation. Use with caution.
+**Status**: Successfully transmitting on Arduino Nesso N1. RF parameters validated for basic operation.
 
 **Regional Profiles**: EU (868 MHz), US (915 MHz), IN (865 MHz)
 
