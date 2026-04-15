@@ -132,6 +132,8 @@ public:
      * @brief Start the timer
      */
     void startTimer() {
+        preciseTsUnbTimer = 0.0f;
+        gptimer_set_raw_count(timerHandle, 0);
         TsUnbTimerFlag = false;
         ESP_ERROR_CHECK(gptimer_start(timerHandle));
     }
@@ -221,6 +223,10 @@ public:
      * @note CS pin is handled separately in spiSend/spiSendReceive functions
      */
     void spiInit() {
+        // Drive CS HIGH before SPI.begin() to prevent glitching the radio
+        pinMode(CS_PIN, OUTPUT);
+        digitalWrite(CS_PIN, HIGH);
+        
         // Always ensure SPI is configured with correct pins
         // Safe to call multiple times - ESP32 handles this gracefully
         if (SPI_SCK != -1 && SPI_MISO != -1 && SPI_MOSI != -1) {
@@ -230,10 +236,6 @@ public:
             // Use default pins from board variant
             SPI.begin();
         }
-        
-        // Always configure CS pin for radio
-        pinMode(CS_PIN, OUTPUT);
-        digitalWrite(CS_PIN, HIGH);
     }
 
     /**
@@ -243,7 +245,8 @@ public:
      * Only releases the CS pin.
      */
     void spiDeinit() {
-        pinMode(CS_PIN, INPUT);
+        pinMode(CS_PIN, OUTPUT);
+        digitalWrite(CS_PIN, HIGH);
     }
 
     /**

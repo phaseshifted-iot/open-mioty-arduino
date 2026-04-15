@@ -19,6 +19,8 @@ See LICENSE.md for complete license information
 #define ESP32_UTILS_H_
 
 #include <Arduino.h>
+#include <Arduino_Nesso_N1.h>
+#include <Wire.h>
 #include <esp_mac.h>
 
 namespace TsUnbLib {
@@ -47,15 +49,86 @@ inline void getEui64(uint8_t* eui64) {
  * @note Requires Arduino Nesso N1 board support package
  */
 inline void enableRadioModule() {
+    Serial.println("[Radio] enableRadioModule() called");
+    Serial.flush();
+    #ifdef Arduino_Nesso_N1_h
+    Serial.println("[Radio] Nesso N1 detected via #ifdef");
+    Serial.flush();
+    // On Nesso N1, LORA_ENABLE/ANT_SW/LNA are on PI4IOE5V6408 I/O expander E0 (0x43).
+    //
+    // CRITICAL: The BSP does a SOFTWARE RESET of the entire expander on its first
+    // pin access (lazy init). We MUST trigger that reset BEFORE our direct I2C writes,
+    // otherwise any later BSP call on E0 (e.g. pinMode(KEY1, ...)) would wipe our
+    // register settings — killing LORA_ANTENNA_SWITCH and causing ~40 dB attenuation.
+    //
+    // Pattern: trigger BSP lazy init → then override with atomic I2C writes.
+    pinMode(LORA_ENABLE, OUTPUT);  // Triggers BSP lazy init + software reset of E0
+
+    // Now override ALL E0 registers via direct I2C (BSP won't reset again).
+    const uint8_t E0_ADDR = 0x43;
+    const uint8_t RADIO_PINS = (1 << 7) | (1 << 6) | (1 << 5);  // P7,P6,P5
+
+    // Reg 0x03: Direction (1 = output on PI4IOE5V6408). Set P5,P6,P7 as outputs.
+    Wire.beginTransmission(E0_ADDR);
+    Wire.write(0x03);
+    Wire.write(RADIO_PINS);
+    uint8_t err = Wire.endTransmission();
+    Serial.print("[Radio] I2C reg 0x03 write status: "); Serial.println(err);
+
+    // Reg 0x07: High-Z (0 = push-pull). Set P5,P6,P7 as push-pull.
+    Wire.beginTransmission(E0_ADDR);
+    Wire.write(0x07);
+    Wire.write(~RADIO_PINS & 0xFF);
+    Wire.endTransmission();
+
+    // Assert RESET (LORA_ENABLE LOW)
+    Wire.beginTransmission(E0_ADDR);
+    Wire.write(0x05);
+    Wire.write(0x00);
+    Wire.endTransmission();
+    delay(50);
+
+    // Release RESET: LORA_ENABLE + ANT_SW + LNA all HIGH
+    Wire.beginTransmission(E0_ADDR);
+    Wire.write(0x05);
+    Wire.write(RADIO_PINS);
+    Wire.endTransmission();
+    delay(200);
+
+    // Readback verification
+    Wire.beginTransmission(E0_ADDR);
+    Wire.write(0x03);
+    Wire.endTransmission(false);
+    Wire.requestFrom(E0_ADDR, (uint8_t)1);
+    uint8_t reg03 = Wire.read();
+    Wire.beginTransmission(E0_ADDR);
+    Wire.write(0x05);
+    Wire.endTransmission(false);
+    Wire.requestFrom(E0_ADDR, (uint8_t)1);
+    uint8_t reg05 = Wire.read();
+    Wire.beginTransmission(E0_ADDR);
+    Wire.write(0x07);
+    Wire.endTransmission(false);
+    Wire.requestFrom(E0_ADDR, (uint8_t)1);
+    uint8_t reg07 = Wire.read();
+    Serial.print("[Radio] E0 regs: 0x03=0x"); Serial.print(reg03, HEX);
+    Serial.print(" 0x05=0x"); Serial.print(reg05, HEX);
+    Serial.print(" 0x07=0x"); Serial.println(reg07, HEX);
+
+    // Check BUSY pin
+    pinMode(19, INPUT);
+    Serial.print("[Radio] BUSY(GPIO19)="); Serial.println(digitalRead(19));
+
+    Serial.println("[Radio] LORA_ENABLE: HIGH (direct I2C, module powered)");
+    #else
     #ifdef LORA_ENABLE
     pinMode(LORA_ENABLE, OUTPUT);
-    digitalWrite(LORA_ENABLE, LOW);   // Reset
+    digitalWrite(LORA_ENABLE, LOW);
     delay(50);
-    digitalWrite(LORA_ENABLE, HIGH);  // Enable (must stay HIGH)
-    delay(200);  // Wait for SX1262 power-up and stabilization
+    digitalWrite(LORA_ENABLE, HIGH);
+    delay(200);
     Serial.println("[Radio] LORA_ENABLE: HIGH (module powered)");
-    #else
-    // LORA_ENABLE not defined - radio is always powered on this board
+    #endif
     #endif
 }
 

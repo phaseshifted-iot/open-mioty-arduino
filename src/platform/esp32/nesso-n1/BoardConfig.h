@@ -73,7 +73,7 @@ struct BoardConfig {
     
     /// SX1262 RESET (not used - controlled via LORA_ENABLE on I/O expander)
     /// Must use RADIOLIB_NC when creating SX1262 Module instance
-    static constexpr int8_t RADIO_RESET = -2;  // RADIOLIB_NC value
+    static constexpr int8_t RADIO_RESET = -1;  // RADIOLIB_NC value
     
     /// SX1262 BUSY pin
     static constexpr int8_t RADIO_BUSY = 19;
@@ -86,9 +86,9 @@ struct BoardConfig {
     static constexpr int16_t TIMING_OFFSET_PPM = 0;
     
     /// Antenna loss compensation in dBm (positive = loss, negative = gain)
-    /// Nesso N1 has poor antenna with ~6 dB loss, so we compensate by adding 6 dBm
+    /// Nesso N1 has poor antenna with ~8 dB loss, so we compensate by adding 8 dBm
     /// Effective radiated power = min(chip_max, regional_max + ANTENNA_LOSS_DBM)
-    static constexpr int8_t ANTENNA_LOSS_DBM = 6;
+    static constexpr int8_t ANTENNA_LOSS_DBM = 8;
     
     // ========================================================================
     // BOARD INFORMATION

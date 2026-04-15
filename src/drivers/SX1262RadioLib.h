@@ -138,7 +138,9 @@ public:
         // Initialize in LoRa mode first (validated configuration)
         Serial.println("[SX1262] Step 1: radio.begin()...");
         Serial.flush();
-        int16_t state = radio.begin(initFreqMHz);
+        int16_t state = radio.begin(initFreqMHz, 125.0, 9, 7,
+                                    RADIOLIB_SX126X_SYNC_WORD_PRIVATE,
+                                    10, 8, 3.0, true);
         if (state != RADIOLIB_ERR_NONE) {
             Serial.print("[SX1262] ERROR: begin() failed with code: ");
             Serial.println(state);
@@ -157,7 +159,8 @@ public:
                                4.8,                                   // RX bandwidth (mioty: ~3 kHz)
                                effectiveTxPower,                      // TX power with antenna compensation
                                16,                                    // Preamble (will disable)
-                               0.0);                                  // TCXO voltage = 0.0 for XTAL
+                               3.0,                                   // TCXO voltage = 3.0V
+                               true);                                 // Use LDO regulator
         
         if (state != RADIOLIB_ERR_NONE) {
             Serial.print("[SX1262] ERROR: beginFSK() failed with code: ");
@@ -167,6 +170,9 @@ public:
         }
         Serial.println("[SX1262] Step 2: OK");
         Serial.flush();
+
+        // Enable DIO2 as RF switch control (required for Nesso N1 antenna path)
+        radio.setDio2AsRfSwitch(true);
         
         Serial.println("[SX1262] Step 3: setPaConfig()...");
         Serial.flush();
@@ -297,9 +303,11 @@ public:
         radio.setPaConfig(0x04, 0x07, 0x00, 0x01);  // High power PA
         radio.setOutputPower(effectiveTxPower);  // Use stored value from init()
 
-        // Initial delay for system initialization (~4 symbol periods)
-        Cpu.addTimerDelay(4);
+        // Start timer FIRST (resets accumulator + counter to zero),
+        // then add the initial delay. Reversing this order causes stale
+        // accumulator values from the previous TX to corrupt all alarm times.
         Cpu.startTimer();
+        Cpu.addTimerDelay(4);
 
         // ========================================================================
         // CRITICAL TIMING SECTION

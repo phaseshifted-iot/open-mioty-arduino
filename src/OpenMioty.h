@@ -105,9 +105,10 @@ See LICENSE.md for complete license information
 // Regional profiles (frequency bands, power limits)
 #include "regional/RegionalProfiles.h"
 
-// Board-specific templates (under platform/<mcu>/<board>/)
+// Board-specific templates and helpers (under platform/<mcu>/<board>/)
 #include "platform/esp32/nesso-n1/BoardConfig.h"
 #include "platform/esp32/nesso-n1/Templates.h"
+#include "platform/esp32/nesso-n1/NessoN1Helper.h"
 
 // ============================================================================
 // CONVENIENCE NAMESPACE - Simple API for users
